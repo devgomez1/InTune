@@ -1,20 +1,21 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeComponent from "./Screens/home";
+import TrendingComponent from "./Screens/trending";
+import ChartsComponent from "./Screens/charts";
 
-export default function App() {
+const Stack = createBottomTabNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Chris Sucks React Native ON TOP^</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeComponent} />
+        <Stack.Screen name="Trending" component={TrendingComponent} />
+        <Stack.Screen name="Charts" component={ChartsComponent} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
