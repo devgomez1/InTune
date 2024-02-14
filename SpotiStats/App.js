@@ -1,21 +1,17 @@
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeComponent from "./Screens/home";
-import TrendingComponent from "./Screens/trending";
-import ChartsComponent from "./Screens/charts";
+import MyStack from "./StackNav";
 
-const Stack = createBottomTabNavigator();
-
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeComponent} />
-        <Stack.Screen name="Trending" component={TrendingComponent} />
-        <Stack.Screen name="Charts" component={ChartsComponent} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+export default function App() {
+  return <MyStack />;
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
