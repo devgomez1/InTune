@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, Image } from "react-native";
+import { Animated, Image, Text, View } from "react-native";
 import { useEffect } from "react";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,23 +8,165 @@ import Axios from "axios";
 import NewReleasesCard from "./newReleases";
 import FollowedArtistsCard from "./followedArtists";
 import RecentTracksCard from "./recentTracks";
+import { useRef } from "react";
+import { ScrollView } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import Footer from "./footer";
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
   const [data, setData] = useState();
   const [newReleases, setNewReleases] = useState();
   const [followedArtists, setFollowedArtists] = useState();
   const [recentlyPlayed, setRecentlyPlayed] = useState();
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [greetingOpacity, setGreetingOpacity] = useState(new Animated.Value(0));
+  const [nameOpacity, setNameOpacity] = useState(new Animated.Value(0));
+  const [emailOpacity, setEmailOpacity] = useState(new Animated.Value(0));
+  const [welcomeOpacity, setWelcomeOpacity] = useState(new Animated.Value(0));
 
-  //   const [showHeader, setShowHeader] = useState(true);
+  // Opacities for the cards
+  const newReleasesOpacities = newReleases
+    ? newReleases.map(() => new Animated.Value(0))
+    : [];
 
-  //   const handleScroll = (event) => {
-  //     const yOffset = event.nativeEvent.contentOffset.y;
-  //     if (yOffset > 50 && showHeader) {
-  //       setShowHeader(false);
-  //     } else if (yOffset <= 50 && !showHeader) {
-  //       setShowHeader(true);
-  //     }
-  //   };
+  const artistYouFollowOpacities = followedArtists
+    ? followedArtists.map(() => new Animated.Value(0))
+    : [];
+
+  const recentlyPlayedOpacities = recentlyPlayed
+    ? recentlyPlayed.map(() => new Animated.Value(0))
+    : [];
+
+  // Header animation
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 150],
+    outputRange: [300, 100],
+    extrapolate: "clamp",
+  });
+
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      newReleasesOpacities.forEach((opacity) => {
+        opacity.setValue(0); // Reset the opacity to 0
+
+        const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+        setTimeout(() => {
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 1000, // The duration of the animation in milliseconds
+            useNativeDriver: true,
+          }).start();
+        }, delay);
+      });
+    }, [newReleasesOpacities])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      artistYouFollowOpacities.forEach((opacity) => {
+        opacity.setValue(0); // Reset the opacity to 0
+
+        const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+        setTimeout(() => {
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 1000, // The duration of the animation in milliseconds
+            useNativeDriver: true,
+          }).start();
+        }, delay);
+      });
+    }, [artistYouFollowOpacities])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      recentlyPlayedOpacities.forEach((opacity) => {
+        opacity.setValue(0); // Reset the opacity to 0
+
+        const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+        setTimeout(() => {
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 1000, // The duration of the animation in milliseconds
+            useNativeDriver: true,
+          }).start();
+        }, delay);
+      });
+    }, [recentlyPlayedOpacities])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      greetingOpacity.setValue(0); // Reset the opacity to 0
+
+      const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+      setTimeout(() => {
+        Animated.timing(greetingOpacity, {
+          toValue: 1,
+          duration: 1000, // The duration of the animation in milliseconds
+          useNativeDriver: true,
+        }).start();
+      }, delay);
+    }, [greetingOpacity])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      nameOpacity.setValue(0); // Reset the opacity to 0
+
+      const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+      setTimeout(() => {
+        Animated.timing(nameOpacity, {
+          toValue: 1,
+          duration: 1000, // The duration of the animation in milliseconds
+          useNativeDriver: true,
+        }).start();
+      }, delay);
+    }, [nameOpacity])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      emailOpacity.setValue(0); // Reset the opacity to 0
+
+      const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+      setTimeout(() => {
+        Animated.timing(emailOpacity, {
+          toValue: 1,
+          duration: 1000, // The duration of the animation in milliseconds
+          useNativeDriver: true,
+        }).start();
+      }, delay);
+    }, [emailOpacity])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      welcomeOpacity.setValue(0); // Reset the opacity to 0
+
+      const delay = Math.random() * 1000; // Generate a random delay between 0 and 1000 milliseconds
+
+      setTimeout(() => {
+        Animated.timing(welcomeOpacity, {
+          toValue: 1,
+          duration: 1000, // The duration of the animation in milliseconds
+          useNativeDriver: true,
+        }).start();
+      }, delay);
+    }, [welcomeOpacity])
+  );
 
   // Greeting function
   const greeting = () => {
@@ -50,6 +192,10 @@ function HomeScreen() {
       });
       const json = await response.json();
       setData(json);
+
+      // Set the header title to the username
+      navigation.setOptions({ title: "@" + json.id });
+
       return json;
     } catch (error) {
       console.error(error);
@@ -109,7 +255,7 @@ function HomeScreen() {
     const token = await AsyncStorage.getItem("token");
     try {
       const response = await Axios.get(
-        "https://api.spotify.com/v1/me/player/recently-played?limit=20",
+        "https://api.spotify.com/v1/me/player/recently-played?limit=40",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -132,13 +278,22 @@ function HomeScreen() {
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
     >
-      <ScrollView style={{ marginTop: 0 }}>
-        <View
+      <Animated.ScrollView
+        style={{ marginTop: 0 }}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
+        <Animated.View
           style={{
+            height: headerHeight,
+            opacity: headerOpacity,
             backgroundColor: "rgba(0, 0, 0, 0.3)",
           }}
         >
-          <View style={{ marginTop: 50 }}>
+          <View style={{ marginTop: 25 }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{
@@ -153,7 +308,7 @@ function HomeScreen() {
               />
 
               <View style={{ flexDirection: "column", flex: 1 }}>
-                <Text
+                <Animated.Text
                   style={{
                     color: "white",
                     fontSize: 15,
@@ -161,11 +316,12 @@ function HomeScreen() {
                     marginTop: 30,
                     fontFamily: "Helvetica",
                     fontWeight: "bold",
+                    opacity: greetingOpacity,
                   }}
                 >
                   {greeting()},
-                </Text>
-                <Text
+                </Animated.Text>
+                <Animated.Text
                   style={{
                     color: "white",
                     fontSize: 30,
@@ -175,11 +331,12 @@ function HomeScreen() {
                     fontFamily: "Helvetica",
                     fontWeight: "bold",
                     flexWrap: "wrap",
+                    opacity: nameOpacity,
                   }}
                 >
                   {data?.display_name}
-                </Text>
-                <Text
+                </Animated.Text>
+                <Animated.Text
                   style={{
                     color: "grey",
                     fontSize: 13,
@@ -189,10 +346,11 @@ function HomeScreen() {
                     fontFamily: "Helvetica",
                     fontWeight: "bold",
                     flexWrap: "wrap",
+                    opacity: emailOpacity,
                   }}
                 >
                   {data?.email}
-                </Text>
+                </Animated.Text>
               </View>
             </View>
             <View
@@ -204,30 +362,32 @@ function HomeScreen() {
                 alignItems: "center",
               }}
             >
-              <Text
+              <Animated.Text
                 style={{
                   color: "white",
                   fontSize: 30,
                   marginBottom: 10,
                   marginTop: 10,
                   fontWeight: "bold",
+                  opacity: welcomeOpacity,
                 }}
               >
                 Welcome To InTune
-              </Text>
-              <Text
+              </Animated.Text>
+              <Animated.Text
                 style={{
                   color: "white",
                   fontSize: 15,
                   textAlign: "center",
                   marginBottom: 15,
+                  opacity: welcomeOpacity,
                 }}
               >
                 Lets Dive Deeper Into Your Music.
-              </Text>
+              </Animated.Text>
             </View>
           </View>
-        </View>
+        </Animated.View>
         <View
           style={{
             flexDirection: "column",
@@ -246,6 +406,7 @@ function HomeScreen() {
           </Text>
           <ScrollView
             horizontal={true}
+            indicatorStyle="false"
             showsHorizontalScrollIndicator={false}
             style={{
               flexDirection: "row",
@@ -254,7 +415,14 @@ function HomeScreen() {
             }}
           >
             {followedArtists?.map((item, index) => {
-              return <FollowedArtistsCard key={index} item={item} />;
+              return (
+                <Animated.View
+                  key={index}
+                  style={{ opacity: artistYouFollowOpacities[index] }}
+                >
+                  <FollowedArtistsCard item={item} />
+                </Animated.View>
+              );
             })}
           </ScrollView>
           <Text
@@ -268,35 +436,52 @@ function HomeScreen() {
           >
             Some New Tracks For You
           </Text>
-          <ScrollView
-            horizontal={true}
-            indicatorStyle="false"
-            showsHorizontalScrollIndicator={false}
-            style={{ flexDirection: "row", marginTop: 20 }}
-          >
-            {newReleases?.map((item, index) => {
-              return <NewReleasesCard key={index} item={item} />;
-            })}
-          </ScrollView>
+          <Animated.View>
+            <ScrollView
+              horizontal={true}
+              indicatorStyle="false"
+              showsHorizontalScrollIndicator={false}
+              style={{ flexDirection: "row", marginTop: 20 }}
+            >
+              {newReleases?.map((item, index) => {
+                return (
+                  <Animated.View
+                    key={index}
+                    style={{ opacity: newReleasesOpacities[index] }}
+                  >
+                    <NewReleasesCard item={item} />
+                  </Animated.View>
+                );
+              })}
+            </ScrollView>
+          </Animated.View>
           <Text
             style={{
               color: "white",
-              fontSize: 15,
+              fontSize: 20,
               marginLeft: 10,
               marginTop: 45,
               fontWeight: "bold",
-              marginBottom: 10,
+              marginBottom: 17,
             }}
           >
             Recently Played Tracks
           </Text>
           <View style={{ flexDirection: "column" }}>
             {recentlyPlayed?.map((item, index) => {
-              return <RecentTracksCard key={index} item={item} />;
+              return (
+                <Animated.View
+                  key={index}
+                  style={{ opacity: recentlyPlayedOpacities[index] }}
+                >
+                  <RecentTracksCard item={item} />
+                </Animated.View>
+              );
             })}
           </View>
+          <Footer />
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </LinearGradient>
   );
 }

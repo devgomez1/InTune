@@ -34,6 +34,7 @@ function RecentTracksCard({ item }) {
           flexShrink: 1,
           textAlign: "center",
           marginRight: 5,
+          fontWeight: "bold",
         }}
       >
         {item.track.name} by {item.track.artists[0].name}

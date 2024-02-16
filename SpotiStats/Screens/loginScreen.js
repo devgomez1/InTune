@@ -20,6 +20,7 @@ const LoginScreen = () => {
       } else {
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("expiration");
+        navigation.navigate("Login");
       }
     };
     checkToken();
@@ -50,6 +51,7 @@ const LoginScreen = () => {
         "user-read-private",
         "user-follow-read",
         "user-read-recently-played",
+        "user-top-read",
       ],
       redirectUri: "exp://192.168.1.167:8081/",
     },
@@ -65,12 +67,14 @@ const LoginScreen = () => {
       AsyncStorage.setItem("token", access_token);
       AsyncStorage.setItem("expiration", expiration.toString());
       navigation.navigate("Tabs");
+    } else if (response?.type === "error") {
+      console.log(response);
     }
   }, [response]);
 
   return (
     <LinearGradient
-      colors={["#000000", "#1DB954"]}
+      colors={["#1a1a1a", "#404040"]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
       style={{ flex: 1 }}
